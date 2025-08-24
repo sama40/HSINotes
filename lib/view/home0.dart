@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:light_notes/components/regular_text.dart';
 import 'package:light_notes/view/input_idea.dart';
 
-class Home0Page extends StatelessWidget {
+class Home0Page extends StatefulWidget {
   const Home0Page({super.key});
 
+  @override
+  State<Home0Page> createState() => _Home0PageState();
+}
+
+class _Home0PageState extends State<Home0Page> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

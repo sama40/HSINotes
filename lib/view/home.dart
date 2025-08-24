@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:light_notes/components/card_notes.dart';
 import 'package:light_notes/view/input_idea.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+  static const String routeName = '/home';
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +45,14 @@ class HomePage extends StatelessWidget {
                     'There will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs.',
               ),
               CardNotes(
-            title: 'New Product Idea Design 4',
-            description:
-                'Create a mobile app UI Kit that provide a basic notes functionality but with some improvement.'
-                '\n\n'
-                'There will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs.',
-          ),
+                title: 'New Product Idea Design 4',
+                description:
+                    'Create a mobile app UI Kit that provide a basic notes functionality but with some improvement.'
+                    '\n\n'
+                    'There will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs.',
+              ),
             ],
           ),
-          
         ],
       ),
       floatingActionButton: FloatingActionButton(
