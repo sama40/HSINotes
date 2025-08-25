@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:light_notes/components/regular_text.dart';
+import 'package:light_notes/model/note.dart';
 import 'package:light_notes/view/home.dart';
 
-class InputIdeaPage extends StatelessWidget {
+class InputIdeaPage extends StatefulWidget {
   const InputIdeaPage({super.key});
+
+  @override
+  State<InputIdeaPage> createState() => _InputIdeaPageState();
+}
+
+class _InputIdeaPageState extends State<InputIdeaPage> {
+  final _titleController = TextEditingController();
+  final _contentController = TextEditingController();
+  final Box<Note> notesBox = Hive.box<Note>('notes');
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +39,7 @@ class InputIdeaPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextFormField(
+              controller: _titleController,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 hintText: 'New Products Ideas',
@@ -36,6 +48,7 @@ class InputIdeaPage extends StatelessWidget {
             ),
             Expanded(
               child: TextFormField(
+                controller: _contentController,
                 maxLines: null, // Allows for unlimited lines
                 expands: true, // Allows the text field to expand vertically
                 textAlignVertical: TextAlignVertical.top,
@@ -83,8 +96,14 @@ class InputIdeaPage extends StatelessWidget {
                           label: const RegularText(text: "Mark as Finished"),
                           icon: const Icon(Icons.check),
                           onPressed: () {
+                            final newNote = Note(
+                              title: _titleController.text,
+                              content: _contentController.text,
+                              createdAt: DateTime.now(),
+                            );
+                            notesBox.add(newNote);
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                             Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => HomePage(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:light_notes/components/card_notes.dart';
+import 'package:hive/hive.dart';
+import 'package:light_notes/model/note.dart';
 import 'package:light_notes/view/input_idea.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,49 +12,62 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
+    final notesBox = Hive.box<Note>('notes');
     return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            children: [
-              CardNotes(
-                title: 'New Product Idea Design 1',
-                description:
-                    'Create a mobile app UI Kit that provide a basic notes functionality but with some improvement.'
-                    '\n\n'
-                    'There will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs.',
+      body: ListView.builder(
+        itemCount: notesBox.length,
+        itemBuilder: (context, index) {
+          final note = notesBox.getAt(index);
+          if (note == null) return const SizedBox.shrink();
+          return Expanded(
+            child: Card(
+              child: ListTile(
+                title: Text(
+                  note.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                subtitle: Text(
+                  note.content,
+                  maxLines: 7,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Delete Note?'),
+                      content: const Text(
+                        'Are you sure you want to delete this note?',
+                      ),
+                      actions: [
+                        TextButton(
+                          child: const Text('Cancel'),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        TextButton(
+                          child: const Text('Delete'),
+                          onPressed: () {
+                            setState(() {
+                              Navigator.pop(context);
+                              notesBox.deleteAt(index);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-              CardNotes(
-                title: 'New Product Idea Design 2',
-                description:
-                    'Create a mobile app UI Kit that provide a basic notes functionality but with some improvement.'
-                    '\n\n'
-                    'There will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs.',
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              CardNotes(
-                title: 'New Product Idea Design 3',
-                description:
-                    'Create a mobile app UI Kit that provide a basic notes functionality but with some improvement.'
-                    '\n\n'
-                    'There will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs.',
-              ),
-              CardNotes(
-                title: 'New Product Idea Design 4',
-                description:
-                    'Create a mobile app UI Kit that provide a basic notes functionality but with some improvement.'
-                    '\n\n'
-                    'There will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs.',
-              ),
-            ],
-          ),
-        ],
+            ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

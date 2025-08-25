@@ -2,7 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:hive/hive.dart';
 import 'package:light_notes/components/regular_text.dart';
+import 'package:light_notes/model/note.dart';
+import 'package:light_notes/view/home.dart';
 import 'package:light_notes/view/home0.dart';
 import 'package:light_notes/view/register.dart';
 import 'package:light_notes/service/user/local_service.dart';
@@ -37,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final notesBox = Hive.box<Note>('notes');
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -113,12 +117,21 @@ class _LoginPageState extends State<LoginPage> {
                         await Future.delayed(const Duration(seconds: 1));
                         if (_formKey.currentState?.validate() == true &&
                             logedIn) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Home0Page(),
-                            ),
-                          );
+                          if (notesBox.length==0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Home0Page(),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(),
+                              ),
+                            );
+                          }
                         } else {
                           EasyLoading.showToast('User atau password salah!');
                         }
