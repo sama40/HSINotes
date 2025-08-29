@@ -4,23 +4,31 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:light_notes/bloc/note/bloc/note_bloc.dart';
 import 'package:light_notes/components/regular_text.dart';
 import 'package:light_notes/enum/status_enum.dart';
+import 'package:light_notes/model/note_model.dart';
 import 'package:light_notes/view/home.dart';
 
-class InputIdeaPage extends StatefulWidget {
-  const InputIdeaPage({super.key});
+class EditIdeaPage extends StatefulWidget {
+  const EditIdeaPage({super.key, required this.note});
 
-  //final NoteModel? note;
+  final NoteModel? note;
 
   static const String routeName = '/note';
 
   @override
-  State<InputIdeaPage> createState() => _InputIdeaPageState();
+  State<EditIdeaPage> createState() => _EditIdeaPageState();
 }
 
-class _InputIdeaPageState extends State<InputIdeaPage> {
+class _EditIdeaPageState extends State<EditIdeaPage> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-  //  final Box<Note> notesBox = Hive.box<Note>('notes');
+
+  @override
+  void initState() {
+    super.initState();
+
+    _titleController.text = widget.note!.title;
+    _contentController.text = widget.note!.content;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +72,6 @@ class _InputIdeaPageState extends State<InputIdeaPage> {
                 controller: _titleController,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 decoration: InputDecoration(
-                  hintText: 'New Products Ideas',
                   border: OutlineInputBorder(borderSide: BorderSide.none),
                 ),
               ),
@@ -79,10 +86,6 @@ class _InputIdeaPageState extends State<InputIdeaPage> {
                     fontWeight: FontWeight.w400,
                   ),
                   decoration: InputDecoration(
-                    hintText:
-                        'Create a mobile app UI Kit that provide a basic notes functionality but with some improvement.'
-                        '\n\n'
-                        'There will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs.',
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     alignLabelWithHint: true,
                   ),
@@ -119,25 +122,17 @@ class _InputIdeaPageState extends State<InputIdeaPage> {
                             icon: const Icon(Icons.check),
                             onPressed: () {
                               context.read<NoteBloc>().add(
-                                CreateNoteEvent(
+                                UpdateNoteEvent(
+                                  id: widget.note!.id,
                                   title: _titleController.text,
                                   content: _contentController.text,
                                 ),
                               );
-                              //notesBox.add(newNote);
                               ScaffoldMessenger.of(
                                 context,
                               ).hideCurrentSnackBar();
                             },
                           ),
-                          // TextButton.icon(
-                          //   label: const RegularText(
-                          //     text: "Delete Note",
-                          //     color: Colors.red,
-                          //   ),
-                          //   icon: const Icon(Icons.delete, color: Colors.red),
-                          //   onPressed: () {},
-                          // ),
                         ],
                       ),
                       duration: Duration(minutes: 1),

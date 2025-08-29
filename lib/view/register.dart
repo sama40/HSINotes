@@ -130,6 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       TextFormField(
                         controller: passwordController,
                         obscureText: true,
+                        keyboardType: TextInputType.visiblePassword,
                         validator: ValidationBuilder().minLength(8).build(),
                         decoration: InputDecoration(
                           hintText: '*********',
@@ -173,9 +174,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: RichText(
                           text: TextSpan(
                             children: [
-                              TextSpan(text: "Already have an account? "),
                               TextSpan(
-                                text: "Login here",
+                                text: "lready have an account? Login here",
                                 style: TextStyle(color: Colors.indigo),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {

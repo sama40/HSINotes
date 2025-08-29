@@ -27,7 +27,7 @@ class UserLocalService {
         id: ulid,
         name: name,
         email: email,
-        password: password,
+       // password: password,
       );
 
       final box = await _box;
